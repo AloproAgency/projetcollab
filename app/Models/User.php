@@ -32,7 +32,16 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class)->withPivot('role')->withTimestamps();
+    }
 
+    // Relation avec les tâches via la table pivot task_user
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class);
+    }
     /**
      * Get the attributes that should be cast.
      *
