@@ -15,6 +15,7 @@ class Project extends Model
         'start_date',
         'end_date',
         'status',
+        'user_id',
     ];
 
     // Relation avec les utilisateurs via la table pivot project_user
@@ -27,5 +28,10 @@ class Project extends Model
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class); // Un projet a plusieurs documents
     }
 }

@@ -33,17 +33,17 @@
             <!-- Navigation -->
             <nav class="flex-1 p-4">
                 <div class="space-y-2">
-                    <a href="#" class="flex items-center gap-3 p-3 rounded-lg bg-teal-50 text-teal-600">
+                    <a href="/dashboard" class="flex items-center gap-3 p-3 rounded-lg {{ $page == 'dashboard' ? 'bg-teal-100 text-teal-600' : 'hover:bg-gray-50 text-gray-600' }}">
                         <i class="fas fa-home text-lg"></i>
                         <span class="sidebar-text">Accueil</span>
                     </a>
-                    <a href="#" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-600">
+                    <a href="/projects" class="flex items-center gap-3 p-3 rounded-lg {{ $page == 'projects' ? 'bg-teal-100 text-teal-600' : 'hover:bg-gray-50 text-gray-600' }}">
                         <i class="fas fa-tasks text-lg"></i>
                         <span class="sidebar-text">Projets</span>
                     </a>
-                    <a href="#" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-600">
+                    <a href="/teams" class="flex items-center gap-3 p-3 rounded-lg {{ $page == 'teams' ? 'bg-teal-100 text-teal-600' : 'hover:bg-gray-50 text-gray-600' }}">
                         <i class="fas fa-users text-lg"></i>
-                        <span class="sidebar-text">Équipe</span>
+                        <span class="sidebar-text">Mon équipe</span>
                     </a>
                 </div>
             </nav>
@@ -77,12 +77,7 @@
                     <p class="text-gray-500">Bienvenue, {{ Auth::user()->name }}</p>
                 </div>
                 <div class="flex items-center gap-4">
-                    <div class="relative flex-1 md:flex-initial">
-                        <input type="text" 
-                               placeholder="Rechercher..." 
-                               class="w-full md:w-64 pl-10 pr-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    </div>
+                    
                     <button class="p-2 rounded-lg hover:bg-gray-100">
                         <i class="fas fa-bell text-gray-600"></i>
                     </button>
@@ -90,16 +85,59 @@
             </div>
         </header>
 
-<div class="p-6 shadow-sm mb-10 h-screen flex-0 bg-gray-150">
+<div class="px-6 shadow-sm mb-2 h-screen flex-0 bg-gray-150">
     @if (session('success'))
-        <div class="container mx-auto px-6 py-12">
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                <strong class="font-bold">Succès!</strong>
-                <span class="block sm:inline">{{ session('success') }}</span>
+        <div x-data="{ show: true }" 
+            x-init="setTimeout(() => show = false, 8000)" 
+            x-show="show" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 transform translate-y-4"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform translate-y-4"
+            class="fixed bottom-4 right-4 z-50">
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-lg flex items-center justify-between">
+                <div>
+                    <strong class="font-bold">Succès!</strong>
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+                <button @click="show = false" class="ml-4 text-green-700 hover:text-green-900">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
             </div>
         </div>
     @endif
-    @yield('content')
+    @if (@session('error'))
+        <div x-data="{ show: true }" 
+            x-init="setTimeout(() => show = false, 8000)" 
+            x-show="show" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 transform translate-y-4"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform translate-y-4"
+            class="fixed bottom-4 right-4 z-50">
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg flex items-center justify-between">
+                <div>
+                    <strong class="font-bold">Erreur!</strong>
+                    <span class="block sm:inline">{{ session('error') }}</span>
+                </div>
+                <button @click="show = false" class="ml-4 text-red-700 hover:text-red-900">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    @endif
+
+    <div class="container mx-auto pt-5">
+        @yield('content')
+    </div>
 </div>
 </main>
 
@@ -139,5 +177,6 @@
         }
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

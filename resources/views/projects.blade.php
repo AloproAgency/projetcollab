@@ -1,5 +1,5 @@
 <?php 
-$page = 'dashboard';
+$page = 'projects';
 ?>
 @extends('layouts.app')
 
@@ -35,59 +35,6 @@ $page = 'dashboard';
         }
     }
 }">
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white p-6 rounded-lg shadow-sm card-hover">
-            <div class="flex items-center justify-between mb-4">
-                <div class="text-gray-500">Projets</div>
-                <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <i class="fas fa-folder text-blue-600"></i>
-                </div>
-            </div>
-            <div class="text-2xl font-bold">{{ $projects->count()+$projects_invite->count() }}</div>
-            <div class="text-sm text-gray-500">{{ $projects->where('status', 'en_cours')->count()+$projects_invite->where('status', 'en_cours')->count() }} en cours</div>
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow-sm card-hover">
-            <div class="flex items-center justify-between mb-4">
-                <div class="text-gray-500">Tâches</div>
-                <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                    <i class="fas fa-tasks text-green-600"></i>
-                </div>
-            </div>
-            <div class="text-2xl font-bold">{{ $tasks->count() }}</div>
-            <div class="text-sm text-gray-500">{{ $tasks->where('status', 'en_cours')->count() }} non terminées</div>
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow-sm card-hover">
-            <div class="flex items-center justify-between mb-4">
-                <div class="text-gray-500">Mes collaborateurs</div>
-                <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                    <i class="fas fa-users text-purple-600"></i>
-                </div>
-            </div>
-            <div class="text-2xl font-bold">{{ $users->count() }}</div>
-            <div class="text-sm text-gray-500">{{ $users->where('created_at', '>=', now()->subDays(30))->count() }} nouveaux</div>
-        </div>
-        <?php
-        $tasks_in_late_all = $tasks->filter(function($task) {
-            return $task->status != 'termine' && $task->due_date < now();
-        })->count();
-        $tasks_in_late_for_user = $tasks->filter(function($task) {
-            return $task->status != 'termine' && $task->due_date < now() && $task->user_id == Auth::id();
-        })->count();
-        ?>
-        <div class="bg-white p-6 rounded-lg shadow-sm card-hover">
-            <div class="flex items-center justify-between mb-4">
-                <div class="text-gray-500">Tâches en retard</div>
-                <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
-                    <i class="fas fa-clock text-orange-600"></i>
-                </div>
-            </div>
-            <div class="text-2xl font-bold">{{$tasks_in_late_all}}</div>
-            <div class="text-sm text-gray-500">{{$tasks_in_late_for_user}} sous votre responsabilité</div>
-        </div>
-    </div>
 
     <!-- Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -112,7 +59,7 @@ $page = 'dashboard';
                 <!-- Liste des projets -->
                 <div class="divide-y divide-teal-100">
                     @if ($projects->count())
-                        @foreach($projects->take(3) as $project)
+                        @foreach($projects as $project)
                         <div onclick="window.location.href='{{ route('projects.show', $project) }}'" class="group hover:bg-teal-50 transition-colors cursor-pointer">
                             <div class="p-6">
                                 <div class="flex items-center justify-between">
@@ -184,7 +131,7 @@ $page = 'dashboard';
                                                 x-transition:leave="transition ease-in duration-75"
                                                 x-transition:leave-start="transform opacity-100 scale-100"
                                                 x-transition:leave-end="transform opacity-0 scale-95"
-                                                class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-100">
+                                                class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
                                                 <div class="py-1">
                                                     <!-- Voir -->
                                                     <a href="{{ route('projects.show', $project) }}" 
@@ -236,17 +183,6 @@ $page = 'dashboard';
                             </div>
                         </div>
                     @endif
-                    @if ($projects->count() > 3)
-                        <div class="p-6 flex justify-center">
-                            <a href="{{ route('projects.index') }}">
-                                <button 
-                                    class="px-6 py-2 border border-teal-500 text-teal-500 font-medium rounded-lg hover:bg-teal-500 hover:text-white transition duration-300"
-                                >
-                                    Voir plus
-                                </button>
-                            </a>
-                        </div>
-                    @endif
                 </div>
                 <div style="margin-bottom: 100px"></div>
             </div>
@@ -263,7 +199,7 @@ $page = 'dashboard';
                 <!-- Liste des projets -->
                 <div class="divide-y divide-teal-100">
                     @if ($projects_invite->count())
-                        @foreach($projects_invite->take(3) as $project)
+                        @foreach($projects_invite as $project)
                         <div onclick="window.location.href='{{ route('projects.show', $project) }}'" class="group hover:bg-teal-50 transition-colors cursor-pointer">
                             <div class="p-6">
                                 <div class="flex items-center justify-between">
@@ -335,7 +271,7 @@ $page = 'dashboard';
                                                 x-transition:leave="transition ease-in duration-75"
                                                 x-transition:leave-start="transform opacity-100 scale-100"
                                                 x-transition:leave-end="transform opacity-0 scale-95"
-                                                class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-100">
+                                                class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
                                                 <div class="py-1">
                                                     <!-- Voir -->
                                                     <a href="{{ route('projects.show', $project) }}" 
@@ -391,24 +327,13 @@ $page = 'dashboard';
                             </div>
                         </div>
                     @endif
-                    @if ($projects->count() > 3)
-                        <div class="p-6 flex justify-center">
-                            <a href="{{ route('projects.index') }}">
-                                <button 
-                                    class="px-6 py-2 border border-teal-500 text-teal-500 font-medium rounded-lg hover:bg-teal-500 hover:text-white transition duration-300"
-                                >
-                                    Voir plus
-                                </button>
-                            </a>
-                        </div>
-                    @endif
                 </div>
                 <div style="margin-bottom: 100px"></div>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
+   <!-- Modal -->
 <div x-show="open"
 x-cloak
 @keydown.escape.window="open = false"
