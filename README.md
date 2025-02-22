@@ -44,7 +44,7 @@ php artisan key:generate
 
 ### 5️⃣ Lancer le serveur
 ```sh
-php artisan serve
+php artisan serve & npm run dev
 ```
 Accède à l’application sur **http://127.0.0.1:8000** 🚀
 

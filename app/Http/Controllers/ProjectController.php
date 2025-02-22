@@ -85,7 +85,11 @@ class ProjectController extends Controller
             'message' => 'Félicitation! Votre nouveau projet a été ajouté.',
             'is_read' => false,
         ]);
-        Mail::to(Auth::user()->email)->send(new ProjectNotification($project, $notif->message));
+        try {
+            Mail::to(Auth::user()->email)->send(new ProjectNotification($project, $notif->message));
+        } catch (\Exception $e) {
+            
+        }
         return back()->with('success', 'Projet créé avec succès!');
     }
 
@@ -162,7 +166,11 @@ class ProjectController extends Controller
             'message' => 'Vous avez été ajouté au projet ' . $project->title. ' en tant que ' . $request->role. ' par ' . Auth::user()->name. ' Connectez vous à votre deashboard pour voir.',
             'is_read' => false,
         ]);
-        Mail::to($user->email)->send(new ProjectNotification($project, $notif->message));
+        try {
+            Mail::to($user->email)->send(new ProjectNotification($project, $notif->message));
+        } catch (\Exception $e) {
+            
+        }
         return back()->with('success', 'Utilisateur ajouté avec succès!');
     }
 

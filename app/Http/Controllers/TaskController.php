@@ -49,7 +49,11 @@ class TaskController extends Controller
                     'message' => 'Vous avez été assigné à la tâche ' . $task->title . ' du projet ' . $project->title,
                     'is_read' => false,
                 ]);
-                Mail::to($user->email)->send(new ProjectNotification($project, $notif->message));
+                try {
+                    Mail::to($user->email)->send(new ProjectNotification($project, $notif->message));
+                } catch (\Exception $e) {
+                    
+                }
             }
         }
         return back()->with('success', 'Tâche créée avec succès!');
@@ -76,7 +80,11 @@ class TaskController extends Controller
                     'message' => 'Vous avez été assigné à la tâche ' . $task->title . ' du projet ' . $project->title,
                     'is_read' => false,
                 ]);
-                Mail::to($user->email)->send(new ProjectNotification($project, $notif->message));
+                try {
+                    Mail::to($user->email)->send(new ProjectNotification($project, $notif->message));
+                } catch (\Exception $e) {
+                    
+                }
             }
         }
         return back()->with('success', 'Tâche mise à jour avec succès!');
