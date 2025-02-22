@@ -429,7 +429,7 @@ $page = 'projects';
                         <div x-show="openfilemenu" @click.outside="openfilemenu = false" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-10">
                             <ul class="py-2 text-gray-700">
                                 <li>
-                                    <a href="" class="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors">
+                                    <a href="{{ Storage::url($document->file_path) }}" class="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors">
                                         <i class="fas fa-download mr-2"></i> Télécharger
                                     </a>
                                 </li>

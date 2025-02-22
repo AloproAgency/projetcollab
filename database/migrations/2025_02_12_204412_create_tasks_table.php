@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');  
-            $table->text('description');  
+            $table->text('description'); 
+            $table->text('title'); 
             $table->date('due_date');  
-            $table->enum('status', ['en_cours', 'terminee', 'suspendue']); 
+            $table->enum('status', ['en cours', 'terminée', 'suspendue']); 
             $table->timestamps();
         });
     }

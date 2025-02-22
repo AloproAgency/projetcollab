@@ -8,6 +8,7 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Project;
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('projects.tasks', TaskController::class);
     Route::resource('projects.documents', DocumentController::class);
     Route::put('/projects/{project}/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+    
 });
 
 require __DIR__.'/auth.php';

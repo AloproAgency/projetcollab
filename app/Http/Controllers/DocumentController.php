@@ -17,7 +17,7 @@ class DocumentController extends Controller
         $document = new Document();
         $document->project_id = $project->id;
         $document->title = $request->titlefile;
-        $document->file_path = $request->file('file')->store('documents');
+        $document->file_path = $request->file('file')->store('documents', 'public');
 
         $document->save();
 

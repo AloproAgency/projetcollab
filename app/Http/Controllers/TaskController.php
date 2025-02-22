@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ProjectNotification;
 
 class TaskController extends Controller
 {
@@ -48,10 +49,7 @@ class TaskController extends Controller
                     'message' => 'Vous avez été assigné à la tâche ' . $task->title . ' du projet ' . $project->title,
                     'is_read' => false,
                 ]);
-                Mail::raw($notif->message, function ($message) {
-                    $message->to(auth()->user()->email)
-                            ->subject('Tache assignée: ' . $project->title);
-                });
+                Mail::to($user->email)->send(new ProjectNotification($project, $notif->message));
             }
         }
         return back()->with('success', 'Tâche créée avec succès!');
@@ -78,10 +76,7 @@ class TaskController extends Controller
                     'message' => 'Vous avez été assigné à la tâche ' . $task->title . ' du projet ' . $project->title,
                     'is_read' => false,
                 ]);
-                Mail::raw($notif->message, function ($message) {
-                    $message->to(auth()->user()->email)
-                            ->subject('Tache assignée: ' . $project->title);
-                });
+                Mail::to($user->email)->send(new ProjectNotification($project, $notif->message));
             }
         }
         return back()->with('success', 'Tâche mise à jour avec succès!');

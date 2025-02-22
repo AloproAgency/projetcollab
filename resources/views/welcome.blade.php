@@ -60,7 +60,7 @@
             <h1 class="text-5xl font-bold text-white">Bienvenue sur ProjetCollab</h1>
             <p class="text-xl text-gray-200 mt-4">La plateforme ultime pour gérer vos projets en équipe.</p>
             <div class="mt-8">
-                <a href="#" class="bg-white text-teal-700 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 hover:scale-105 transition-transform">
+                <a href="{{ route('register') }}" class="bg-white text-teal-700 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 hover:scale-105 transition-transform">
                     Commencer Maintenant <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
@@ -110,7 +110,7 @@
             <h2 class="text-4xl font-bold text-white">Prêt à Transformer Votre Gestion de Projet ?</h2>
             <p class="text-xl text-gray-200 mt-4">Rejoignez des milliers d'équipes qui utilisent déjà ProjetCollab.</p>
             <div class="mt-8">
-                <a href="#" class="bg-white text-teal-700 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 hover:scale-105 transition-transform">
+                <a href="{{ route('register') }}" class="bg-white text-teal-700 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 hover:scale-105 transition-transform">
                     S'inscrire Maintenant <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
@@ -120,11 +120,8 @@
     <!-- Footer -->
     <footer class="bg-teal-900 text-white py-8">
         <div class="container mx-auto text-center">
-            <p>&copy; 2023 ProjetCollab. Tous droits réservés.</p>
-            <div class="mt-4">
-                <a href="#" class="text-gray-400 hover:text-white mx-2">Politique de Confidentialité</a>
-                <a href="#" class="text-gray-400 hover:text-white mx-2">Conditions d'Utilisation</a>
-            </div>
+            <p>&copy; 2023 ProjetCollab. Open Source avec <i class="fas fa-heart text-red-500"></i> par <a href="https://alopro.net" class="font-semibold hover:underline">NOUGBOLOGNI A. Valentin</a>
+            </p>
         </div>
     </footer>
 

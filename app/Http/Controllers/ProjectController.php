@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ProjectNotification;
 
 
 class ProjectController extends Controller
@@ -55,7 +56,7 @@ class ProjectController extends Controller
     // Créer un nouveau projet
     public function store(Request $request)
     {
-        if($request->start_date > $request->end_date){
+        if($request->start_date >= $request->end_date){
             return back()->with('error', 'La date de début doit être inférieure à la date de fin!');
         }
         $request->validate([
@@ -84,12 +85,7 @@ class ProjectController extends Controller
             'message' => 'Félicitation! Votre nouveau projet a été ajouté.',
             'is_read' => false,
         ]);
-
-        Mail::raw($notif->message, function ($message) {
-            $message->to(auth()->user()->email)
-                    ->subject('Nouveau projet ajouté');
-        });
-
+        Mail::to(Auth::user()->email)->send(new ProjectNotification($project, $notif->message));
         return back()->with('success', 'Projet créé avec succès!');
     }
 
@@ -127,12 +123,12 @@ class ProjectController extends Controller
 
     // Afficher un projet spécifique
     public function show(Project $project)
-    {
+    {   $user = auth()->user();
         $this->authorize('view', $project); 
         $tasks = $project->tasks()->orderBy('created_at', 'desc')->get();
         $documents = $project->documents()->orderBy('created_at', 'desc')->get();
         $members = $project->users()->withPivot('role', 'fonction')->get();
-        $notifications = $project->notifications;
+        $notifications = $user->notifications;
         return view('projectview', compact('project', 'tasks', 'members', 'documents', 'notifications'));
     }
     
@@ -141,12 +137,14 @@ class ProjectController extends Controller
     {
         $request->validate([
             'fonction' => 'required|string|max:255',
-            'email' => 'required|exists:users,email',
+            'email' => 'required',
             'role' => 'required|in:admin,membre',
         ]);
 
-        $user = User::where('email', $request->email)->firstOrFail();
-
+        $user = User::where('email', $request->email)->first();
+        if($user == null){
+            return back()->with('error', 'Cet utilisateur n\'existe pas!');
+        }
         if($project->users()->where('user_id', Auth::id())->wherePivot('role', 'admin')->doesntExist()){
             return back()->with('error', 'Vous n\'êtes pas autorisé à ajouter un utilisateur au projet!');
         }
@@ -161,14 +159,10 @@ class ProjectController extends Controller
             'user_id' => $user->id,
             'project_id' => $project->id,
             'type' => 'info',
-            'message' => 'Vous avez été ajouté au projet ' . $project->title,
+            'message' => 'Vous avez été ajouté au projet ' . $project->title. ' en tant que ' . $request->role. ' par ' . Auth::user()->name. ' Connectez vous à votre deashboard pour voir.',
             'is_read' => false,
         ]);
-        Mail::raw($notif->message, function ($message) {
-            $message->to(auth()->user()->email)
-                    ->subject('Partication au projet ' . $project->title);
-        });
-
+        Mail::to($user->email)->send(new ProjectNotification($project, $notif->message));
         return back()->with('success', 'Utilisateur ajouté avec succès!');
     }
 
