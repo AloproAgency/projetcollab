@@ -68,6 +68,14 @@ Les actions sur les projets et tâches sont protégées par **Laravel Policies**
 | POST | `/projects/{project}/tasks` | Ajouter une tâche |
 | DELETE | `/projects/{project}/tasks/{task}` | Supprimer une tâche |
 
+## 👤 Utilisateur de test
+    -Alopro
+        email: alopro512@gmail.com
+        password: 12345678
+    -Richo
+        email: wixorweb@gmail.com
+        password: 12345678
+
 ## 📜 Licence
 Ce projet est sous licence **MIT**. Tu peux l'utiliser, le modifier et le distribuer librement.
 
