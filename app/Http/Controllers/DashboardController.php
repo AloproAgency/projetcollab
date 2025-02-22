@@ -34,7 +34,8 @@ class DashboardController extends Controller
             ->where('user_id', '!=', $user->id)
             ->distinct()
             ->pluck('user_id');
+        $notifications = $user->notifications;
 
-        return view('dashboard', compact('projects', 'tasks', 'users', 'projects_invite'));
+        return view('dashboard', compact('projects', 'tasks', 'users', 'projects_invite', 'notifications'));
     }
 }

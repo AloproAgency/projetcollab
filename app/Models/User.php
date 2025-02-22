@@ -37,6 +37,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Project::class)->withPivot('role')->withTimestamps();
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
     // Relation avec les tâches via la table pivot task_user
     public function tasks()
     {

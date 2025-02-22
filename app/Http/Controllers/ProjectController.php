@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Mail;
 
 
 class ProjectController extends Controller
@@ -40,7 +42,8 @@ class ProjectController extends Controller
             ->where('user_id', '!=', $user->id)
             ->distinct()
             ->pluck('user_id');
-        return view('projects', compact('projects', 'tasks', 'users', 'projects_invite'));
+        $notifications = $user->notifications;
+        return view('projects', compact('projects', 'tasks', 'users', 'projects_invite', 'notifications'));
     }
 
     // Afficher le formulaire de création d'un projet
@@ -74,6 +77,18 @@ class ProjectController extends Controller
 
         // Ajouter l'utilisateur comme membre du projet
         $project->users()->attach(Auth::id(), ['role' => 'admin', 'fonction' => 'Créateur']); 
+        $notif = Notification::create([
+            'user_id' => Auth::id(),
+            'project_id' => $project->id,
+            'type' => 'info',
+            'message' => 'Félicitation! Votre nouveau projet a été ajouté.',
+            'is_read' => false,
+        ]);
+
+        Mail::raw($notif->message, function ($message) {
+            $message->to(auth()->user()->email)
+                    ->subject('Nouveau projet ajouté');
+        });
 
         return back()->with('success', 'Projet créé avec succès!');
     }
@@ -117,7 +132,8 @@ class ProjectController extends Controller
         $tasks = $project->tasks()->orderBy('created_at', 'desc')->get();
         $documents = $project->documents()->orderBy('created_at', 'desc')->get();
         $members = $project->users()->withPivot('role', 'fonction')->get();
-        return view('projectview', compact('project', 'tasks', 'members', 'documents'));
+        $notifications = $project->notifications;
+        return view('projectview', compact('project', 'tasks', 'members', 'documents', 'notifications'));
     }
     
     // Ajouter un utilisateur au projet
@@ -141,6 +157,17 @@ class ProjectController extends Controller
             return back()->with('error', 'Cet utilisateur est déjà membre du projet!');
         }
         $project->users()->syncWithoutDetaching([$user->id => ['role' => $request->role, 'fonction' => $request->fonction]]);
+        $notif = Notification::create([
+            'user_id' => $user->id,
+            'project_id' => $project->id,
+            'type' => 'info',
+            'message' => 'Vous avez été ajouté au projet ' . $project->title,
+            'is_read' => false,
+        ]);
+        Mail::raw($notif->message, function ($message) {
+            $message->to(auth()->user()->email)
+                    ->subject('Partication au projet ' . $project->title);
+        });
 
         return back()->with('success', 'Utilisateur ajouté avec succès!');
     }

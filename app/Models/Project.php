@@ -34,4 +34,9 @@ class Project extends Model
     {
         return $this->hasMany(Document::class); // Un projet a plusieurs documents
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }

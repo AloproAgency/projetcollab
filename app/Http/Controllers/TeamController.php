@@ -21,6 +21,8 @@ class TeamController extends Controller
         ->where('id', '!=', $user->id)
         ->distinct()
         ->get();
+
+        $notifications = $user->notifications;
     
         $members->each(function ($member) {
             $member->projects_count = Project::whereHas('users', function ($query) use ($member) {
@@ -29,7 +31,7 @@ class TeamController extends Controller
             })->count();
         });
     
-        return view('teams', compact('members'));
+        return view('teams', compact('members', 'notifications'));
     }
     
 }

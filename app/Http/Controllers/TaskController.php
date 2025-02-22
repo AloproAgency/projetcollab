@@ -7,6 +7,8 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
+use Illuminate\Support\Facades\Mail;
 
 class TaskController extends Controller
 {
@@ -39,6 +41,17 @@ class TaskController extends Controller
             if($project->users->contains($user_id)){
                 $user = User::findOrFail($user_id);
                 $task->users()->attach($user);
+                $notif = Notification::create([
+                    'user_id' => $user->id,
+                    'project_id' => $project->id,
+                    'type' => 'info',
+                    'message' => 'Vous avez été assigné à la tâche ' . $task->title . ' du projet ' . $project->title,
+                    'is_read' => false,
+                ]);
+                Mail::raw($notif->message, function ($message) {
+                    $message->to(auth()->user()->email)
+                            ->subject('Tache assignée: ' . $project->title);
+                });
             }
         }
         return back()->with('success', 'Tâche créée avec succès!');
@@ -58,6 +71,17 @@ class TaskController extends Controller
             if($project->users->contains($user_id)){
                 $user = User::findOrFail($user_id);
                 $task->users()->attach($user);
+                $notif = Notification::create([
+                    'user_id' => $user->id,
+                    'project_id' => $project->id,
+                    'type' => 'info',
+                    'message' => 'Vous avez été assigné à la tâche ' . $task->title . ' du projet ' . $project->title,
+                    'is_read' => false,
+                ]);
+                Mail::raw($notif->message, function ($message) {
+                    $message->to(auth()->user()->email)
+                            ->subject('Tache assignée: ' . $project->title);
+                });
             }
         }
         return back()->with('success', 'Tâche mise à jour avec succès!');

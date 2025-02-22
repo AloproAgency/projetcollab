@@ -6,6 +6,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
     Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
     Route::get('/teams', [TeamController::class, 'index'])->name('teams');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
 
     // Ajouter un utilisateur à un projet
     Route::post('projects/{project}/add-user', [ProjectController::class, 'addUser'])->name('projects.addUser');

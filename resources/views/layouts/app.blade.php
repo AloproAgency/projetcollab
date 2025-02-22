@@ -76,12 +76,15 @@
                     <h1 class="text-2xl font-bold text-gray-800">Tableau de bord</h1>
                     <p class="text-gray-500">Bienvenue, {{ Auth::user()->name }}</p>
                 </div>
-                <div class="flex items-center gap-4">
-                    
-                    <button class="p-2 rounded-lg hover:bg-gray-100">
-                        <i class="fas fa-bell text-gray-600"></i>
-                    </button>
-                </div>
+                <a href="{{route('notifications')}}" class="relative p-2 rounded-lg hover:bg-gray-100 transition-all duration-300 ease-in-out transform hover:scale-105">
+                    <i class="fas fa-bell text-gray-600 text-xl hover:text-gray-800"></i>
+                    @if($notifications->filter(function($notification) { return $notification->is_read == false; })->count() > 0)
+                        <span class="absolute top-1 right-0 h-5 w-5 bg-red-500 text-white text-sm font-semibold rounded-full flex items-center justify-center transform translate-x-1/2 -translate-y-1/2 shadow-sm">
+                            {{ $notifications->filter(function($notification) { return $notification->is_read == false; })->count() }}
+                        </span>
+                    @endif
+                </a>
+                
             </div>
         </header>
 
