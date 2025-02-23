@@ -1,5 +1,7 @@
 # Projet de Gestion de Projets et de Tâches
 
+## 👤 Développé par: NOUGBOLOGNI A. Valentin
+
 ## 📌 Description
 Ce projet est une application web développée avec **Laravel** permettant aux utilisateurs de créer, gérer et collaborer sur des projets. Chaque projet peut contenir plusieurs tâches et inclure plusieurs membres ayant des rôles différents (**admin** ou **membre**).
 
